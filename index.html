@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OtakuVault - Personal Anime Watchlist Tracker</title>
+  <meta name="description" content="Manage, track, and rate your favorite anime with a modern, glowing glassmorphism experience.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  
+  <div class="container">
+    <!-- Header -->
+    <header>
+      <div class="logo-section">
+        <div class="logo-icon">🪐</div>
+        <div class="logo-text">
+          <h1>OtakuVault</h1>
+          <span>Watchlist Tracker</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Dashboard stats -->
+    <section class="dashboard" aria-label="Watchlist Statistics">
+      <div class="stat-card total" id="stat-total-card">
+        <span class="stat-title">Total Anime</span>
+        <span class="stat-value" id="stat-total">0</span>
+      </div>
+      <div class="stat-card watching" id="stat-watching-card">
+        <span class="stat-title">Watching</span>
+        <span class="stat-value" id="stat-watching">0</span>
+      </div>
+      <div class="stat-card completed" id="stat-completed-card">
+        <span class="stat-title">Completed</span>
+        <span class="stat-value" id="stat-completed">0</span>
+      </div>
+      <div class="stat-card planning" id="stat-planning-card">
+        <span class="stat-title">Planning</span>
+        <span class="stat-value" id="stat-planning">0</span>
+      </div>
+      <div class="stat-card rating" id="stat-rating-card">
+        <span class="stat-title">Mean Score</span>
+        <span class="stat-value" id="stat-rating">0.0</span>
+      </div>
+    </section>
+
+    <!-- Controls Bar -->
+    <section class="controls-bar" aria-label="Filters and Sorting">
+      <div class="search-filter-group">
+        <!-- Search bar -->
+        <div class="search-wrapper">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input type="text" id="search-input" placeholder="Search anime title..." aria-label="Search anime title">
+        </div>
+
+        <!-- Sort dropdown -->
+        <div class="select-wrapper">
+          <select id="sort-select" aria-label="Sort options">
+            <option value="name-asc">Title: A-Z</option>
+            <option value="name-desc">Title: Z-A</option>
+            <option value="rating-desc">Rating: Highest</option>
+            <option value="rating-asc">Rating: Lowest</option>
+            <option value="progress-desc">Progress: Most</option>
+          </select>
+        </div>
+
+        <!-- Status Filter Tabs -->
+        <div class="filter-tabs" id="status-tabs" role="tablist">
+          <button class="tab-btn active" data-status="all" role="tab" aria-selected="true">All</button>
+          <button class="tab-btn" data-status="watching" role="tab" aria-selected="false">Watching</button>
+          <button class="tab-btn" data-status="completed" role="tab" aria-selected="false">Completed</button>
+          <button class="tab-btn" data-status="on-hold" role="tab" aria-selected="false">On Hold</button>
+          <button class="tab-btn" data-status="planning" role="tab" aria-selected="false">Plan To Watch</button>
+        </div>
+      </div>
+
+      <!-- Add Button -->
+      <button class="add-btn" id="btn-add-anime" aria-haspopup="dialog">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="12" y1="5" x2="12" y2="19"></line>
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+        </svg>
+        Add Anime
+      </button>
+    </section>
+
+    <!-- Anime List Grid -->
+    <main class="anime-grid" id="anime-grid">
+      <!-- Cards will be dynamically inserted here -->
+    </main>
+  </div>
+
+  <!-- Add/Edit Anime Modal Dialog -->
+  <div class="modal-overlay" id="anime-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="modal-title">Add New Anime</h2>
+        <button class="btn-close-modal" id="btn-close-modal" aria-label="Close dialog">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      
+      <form id="anime-form">
+        <!-- Hidden input to track if editing -->
+        <input type="hidden" id="edit-id">
+
+        <!-- Title -->
+        <div class="form-group">
+          <label for="anime-title">Title *</label>
+          <input type="text" id="anime-title" required placeholder="e.g. Frieren: Beyond Journey's End">
+        </div>
+
+        <div class="form-row">
+          <!-- Status -->
+          <div class="form-group">
+            <label for="anime-status">Status</label>
+            <select id="anime-status">
+              <option value="watching">Watching</option>
+              <option value="completed">Completed</option>
+              <option value="on-hold">On Hold</option>
+              <option value="planning">Plan To Watch</option>
+            </select>
+          </div>
+          <!-- Rating -->
+          <div class="form-group">
+            <label for="anime-rating">My Rating (1-10)</label>
+            <select id="anime-rating">
+              <option value="none">No Rating</option>
+              <option value="10">10 (Masterpiece)</option>
+              <option value="9">9 (Great)</option>
+              <option value="8">8 (Very Good)</option>
+              <option value="7">7 (Good)</option>
+              <option value="6">6 (Fine)</option>
+              <option value="5">5 (Average)</option>
+              <option value="4">4 (Bad)</option>
+              <option value="3">3 (Very Bad)</option>
+              <option value="2">2 (Horrible)</option>
+              <option value="1">1 (Appalling)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <!-- Episodes Watched -->
+          <div class="form-group">
+            <label for="episodes-watched">Episodes Watched</label>
+            <input type="number" id="episodes-watched" min="0" value="0">
+          </div>
+          <!-- Total Episodes -->
+          <div class="form-group">
+            <label for="episodes-total">Total Episodes (0 for unknown)</label>
+            <input type="number" id="episodes-total" min="0" value="0">
+          </div>
+        </div>
+
+        <!-- Genre -->
+        <div class="form-group">
+          <label for="anime-genre">Genre / Tags</label>
+          <input type="text" id="anime-genre" placeholder="e.g. Fantasy, Adventure, Drama">
+        </div>
+
+        <!-- Notes / Comments -->
+        <div class="form-group">
+          <label for="anime-notes">Notes / Comments</label>
+          <textarea id="anime-notes" placeholder="Write your thoughts or reminders..."></textarea>
+        </div>
+
+        <!-- Card Cover Option -->
+        <div class="form-group">
+          <label>Card Theme / Cover Image</label>
+          <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+            <!-- Custom Image Input -->
+            <input type="text" id="cover-url" placeholder="Paste image URL (optional)">
+            
+            <!-- Custom Preset Gradients -->
+            <span style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem;">Or choose a premium neon gradient theme:</span>
+            <div class="gradient-selector" id="gradient-selector">
+              <div class="gradient-option gradient-cyberpunk-bg active" data-gradient="gradient-cyberpunk"></div>
+              <div class="gradient-option gradient-ocean-bg" data-gradient="gradient-ocean"></div>
+              <div class="gradient-option gradient-sunset-bg" data-gradient="gradient-sunset"></div>
+              <div class="gradient-option gradient-emerald-bg" data-gradient="gradient-emerald"></div>
+              <div class="gradient-option gradient-dark-bg" data-gradient="gradient-dark"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Footer Actions -->
+        <div class="modal-footer">
+          <button type="button" class="btn-secondary" id="btn-cancel-modal">Cancel</button>
+          <button type="submit" class="btn-primary" id="btn-save-anime">Save Entry</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
