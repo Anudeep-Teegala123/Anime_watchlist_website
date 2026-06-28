@@ -9,89 +9,282 @@
 </head>
 <body>
   
+  <!-- Anime Background Elements -->
+  <div class="anime-bg-elements" aria-hidden="true">
+    <span class="anime-bg-icon" style="top:5%; left:3%; animation-delay:0s; font-size:2.5rem;">🌸</span>
+    <span class="anime-bg-icon" style="top:12%; right:8%; animation-delay:1.2s; font-size:2rem;">⭐</span>
+    <span class="anime-bg-icon" style="top:30%; left:7%; animation-delay:2.5s; font-size:3rem;">🎌</span>
+    <span class="anime-bg-icon" style="top:45%; right:4%; animation-delay:0.8s; font-size:2.2rem;">🗡️</span>
+    <span class="anime-bg-icon" style="top:60%; left:2%; animation-delay:3.1s; font-size:2rem;">🔮</span>
+    <span class="anime-bg-icon" style="top:75%; right:6%; animation-delay:1.6s; font-size:2.5rem;">🌙</span>
+    <span class="anime-bg-icon" style="top:20%; left:92%; animation-delay:4s; font-size:1.8rem;">🍥</span>
+    <span class="anime-bg-icon" style="top:85%; left:10%; animation-delay:2s; font-size:2.2rem;">⚡</span>
+    <span class="anime-bg-icon" style="top:50%; left:94%; animation-delay:3.5s; font-size:2rem;">🌸</span>
+    <span class="anime-bg-icon" style="top:92%; right:12%; animation-delay:0.5s; font-size:1.8rem;">🐉</span>
+    <span class="anime-bg-icon" style="top:38%; left:50%; animation-delay:2.8s; font-size:1.6rem;">✨</span>
+    <span class="anime-bg-icon" style="top:68%; left:88%; animation-delay:1s; font-size:2rem;">🎐</span>
+  </div>  <!-- Genre Sidebar Toggle Button -->
+  <button class="sidebar-toggle-btn" id="sidebar-toggle" title="Browse by Genre" aria-label="Toggle genre sidebar">
+    <span class="sidebar-toggle-icon-open">📚</span>
+    <span class="sidebar-toggle-icon-close">✕</span>
+  </button>
+
+  <!-- Genre Sidebar -->
+  <aside class="genre-sidebar" id="genre-sidebar">
+    <div class="sidebar-header">
+      <h2 class="sidebar-title">📚 Browse</h2>
+    </div>
+
+    <!-- Pinned: Top Anime of All Time -->
+    <button class="sidebar-category-btn sidebar-top-btn" id="btn-top-anime">
+      🏆 Top Anime of All Time
+    </button>
+
+    <!-- Genre List -->
+    <div class="sidebar-section-label">Genres</div>
+    <div class="sidebar-genre-list" id="sidebar-genre-list">
+      <!-- Dynamically populated by JS -->
+      <div class="sidebar-genre-loading">Loading genres...</div>
+    </div>
+
+    <!-- Sidebar Results Panel -->
+    <div class="sidebar-results" id="sidebar-results">
+      <div class="sidebar-results-header">
+        <h3 id="sidebar-results-title">Select a category</h3>
+        <span class="sidebar-results-count" id="sidebar-results-count"></span>
+      </div>
+      <div class="sidebar-results-grid" id="sidebar-results-grid">
+        <!-- Cards rendered here by JS -->
+      </div>
+    </div>
+  </aside>
+
+  <!-- Sidebar Backdrop (mobile) -->
+  <div class="sidebar-backdrop" id="sidebar-backdrop"></div>
   <div class="container">
     <!-- Header -->
     <header>
-      <div class="logo-section">
+      <div class="logo-section" id="logo-home" title="Go to Home catalog">
         <div class="logo-icon">🪐</div>
         <div class="logo-text">
           <h1>OtakuVault</h1>
           <span>Watchlist Tracker</span>
         </div>
       </div>
+
+      <!-- Unified Header Search Bar -->
+      <div class="search-wrapper header-search-wrapper">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input type="text" id="unified-search-input" placeholder="Search anime title..." aria-label="Search anime title">
+      </div>
+      
+      <!-- View Navigation Tabs -->
+      <nav class="main-nav" aria-label="Main Navigation">
+        <button class="nav-tab active" id="tab-discover" data-view="discover">
+          <span class="tab-icon">🔍</span> Discover Seasons
+        </button>
+        <button class="nav-tab" id="tab-watchlist" data-view="watchlist">
+          <span class="tab-icon">🪐</span> My Watchlist
+        </button>
+      </nav>
+
+      <!-- Custom Color Theme Picker -->
+      <div class="color-picker-wrapper" title="Customize Accent Color">
+        <span class="color-picker-label">🎨 Color</span>
+        <div class="color-picker-input-container">
+          <input type="color" id="theme-color-picker" value="#8b5cf6" aria-label="Choose accent color">
+        </div>
+      </div>
+
+      <!-- Theme Toggle -->
+      <button class="theme-toggle-btn" id="theme-toggle" title="Toggle Dark/Light Mode" aria-label="Toggle theme">
+        <span class="theme-icon-light">☀️</span>
+        <span class="theme-icon-dark">🌙</span>
+      </button>
     </header>
 
-    <!-- Dashboard stats -->
-    <section class="dashboard" aria-label="Watchlist Statistics">
-      <div class="stat-card total" id="stat-total-card">
-        <span class="stat-title">Total Anime</span>
-        <span class="stat-value" id="stat-total">0</span>
-      </div>
-      <div class="stat-card watching" id="stat-watching-card">
-        <span class="stat-title">Watching</span>
-        <span class="stat-value" id="stat-watching">0</span>
-      </div>
-      <div class="stat-card completed" id="stat-completed-card">
-        <span class="stat-title">Completed</span>
-        <span class="stat-value" id="stat-completed">0</span>
-      </div>
-      <div class="stat-card planning" id="stat-planning-card">
-        <span class="stat-title">Planning</span>
-        <span class="stat-value" id="stat-planning">0</span>
-      </div>
-      <div class="stat-card rating" id="stat-rating-card">
-        <span class="stat-title">Mean Score</span>
-        <span class="stat-value" id="stat-rating">0.0</span>
-      </div>
-    </section>
+    <!-- Main Layout Container (Content + Right Sidebar) -->
+    <div class="main-layout">
+      <div class="content-wrapper">
+        <!-- Discover Seasons View Container -->
+        <div id="view-discover-container" class="view-container active">
+          <!-- Discover Filter Controls -->
+          <section class="discover-controls" aria-label="Discover Filters">
+            <div class="discover-selectors-wrapper">
+              <!-- Year Selector -->
+              <div class="selector-group">
+                <span class="selector-label">Year</span>
+                <div class="chip-group" id="year-chips">
+                  <button class="chip-btn" data-year="2005">2005</button>
+                  <button class="chip-btn" data-year="2006">2006</button>
+                  <button class="chip-btn" data-year="2007">2007</button>
+                  <button class="chip-btn" data-year="2008">2008</button>
+                  <button class="chip-btn" data-year="2009">2009</button>
+                  <button class="chip-btn" data-year="2010">2010</button>
+                  <button class="chip-btn" data-year="2011">2011</button>
+                  <button class="chip-btn" data-year="2012">2012</button>
+                  <button class="chip-btn" data-year="2013">2013</button>
+                  <button class="chip-btn" data-year="2014">2014</button>
+                  <button class="chip-btn" data-year="2015">2015</button>
+                  <button class="chip-btn" data-year="2016">2016</button>
+                  <button class="chip-btn" data-year="2017">2017</button>
+                  <button class="chip-btn" data-year="2018">2018</button>
+                  <button class="chip-btn" data-year="2019">2019</button>
+                  <button class="chip-btn" data-year="2020">2020</button>
+                  <button class="chip-btn" data-year="2021">2021</button>
+                  <button class="chip-btn" data-year="2022">2022</button>
+                  <button class="chip-btn" data-year="2023">2023</button>
+                  <button class="chip-btn" data-year="2024">2024</button>
+                  <button class="chip-btn" data-year="2025">2025</button>
+                  <button class="chip-btn active" data-year="2026">2026</button>
+                </div>
+              </div>
+            </div>
+          </section>
 
-    <!-- Controls Bar -->
-    <section class="controls-bar" aria-label="Filters and Sorting">
-      <div class="search-filter-group">
-        <!-- Search bar -->
-        <div class="search-wrapper">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="11" cy="11" r="8"></circle>
-            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-          </svg>
-          <input type="text" id="search-input" placeholder="Search anime title..." aria-label="Search anime title">
+          <!-- Discover Info / Status Banner -->
+          <div class="discover-status-bar">
+            <div class="discover-info" id="discover-info-text">Showing highly rated anime (>7.0)</div>
+            <div class="api-status-badge" id="api-status-badge">Loaded from API</div>
+          </div>
+
+          <!-- Discover Cards Grid -->
+          <main class="anime-grid" id="discover-grid">
+            <!-- Discover Cards will be dynamically inserted here -->
+          </main>
         </div>
 
-        <!-- Sort dropdown -->
-        <div class="select-wrapper">
-          <select id="sort-select" aria-label="Sort options">
-            <option value="name-asc">Title: A-Z</option>
-            <option value="name-desc">Title: Z-A</option>
-            <option value="rating-desc">Rating: Highest</option>
-            <option value="rating-asc">Rating: Lowest</option>
-            <option value="progress-desc">Progress: Most</option>
-          </select>
-        </div>
+        <!-- Watchlist View Container -->
+        <div id="view-watchlist-container" class="view-container">
+          <!-- Dashboard stats -->
+          <section class="dashboard" aria-label="Watchlist Statistics">
+            <div class="stat-card total" id="stat-total-card">
+              <span class="stat-title">Total Anime</span>
+              <span class="stat-value" id="stat-total">0</span>
+            </div>
+            <div class="stat-card watching" id="stat-watching-card">
+              <span class="stat-title">Watching</span>
+              <span class="stat-value" id="stat-watching">0</span>
+            </div>
+            <div class="stat-card completed" id="stat-completed-card">
+              <span class="stat-title">Watched</span>
+              <span class="stat-value" id="stat-completed">0</span>
+            </div>
+            <div class="stat-card watch-next" id="stat-watch-next-card">
+              <span class="stat-title">Watch Next</span>
+              <span class="stat-value" id="stat-watch-next">0</span>
+            </div>
+            <div class="stat-card planning" id="stat-planning-card">
+              <span class="stat-title">Plan to Watch</span>
+              <span class="stat-value" id="stat-planning">0</span>
+            </div>
+            <div class="stat-card rating" id="stat-rating-card">
+              <span class="stat-title">Avg Score</span>
+              <span class="stat-value" id="stat-rating">0.0</span>
+            </div>
+          </section>
 
-        <!-- Status Filter Tabs -->
-        <div class="filter-tabs" id="status-tabs" role="tablist">
-          <button class="tab-btn active" data-status="all" role="tab" aria-selected="true">All</button>
-          <button class="tab-btn" data-status="watching" role="tab" aria-selected="false">Watching</button>
-          <button class="tab-btn" data-status="completed" role="tab" aria-selected="false">Completed</button>
-          <button class="tab-btn" data-status="on-hold" role="tab" aria-selected="false">On Hold</button>
-          <button class="tab-btn" data-status="planning" role="tab" aria-selected="false">Plan To Watch</button>
+          <!-- Watchlist Page Header & Controls -->
+          <section class="list-controls-section" aria-label="Watchlist List Actions">
+            <div class="list-filters-wrapper">
+              <!-- Filter by Watchlist Status Tab selectors -->
+              <div class="status-tabs-container" id="status-tabs">
+                <button class="status-tab active" data-status="all">All</button>
+                <button class="status-tab" data-status="watching">Watching</button>
+                <button class="status-tab" data-status="completed">Watched</button>
+                <button class="status-tab" data-status="watch-next">Watch Next</button>
+                <button class="status-tab" data-status="planning">Plan to Watch</button>
+              </div>
+
+              <!-- Sorting Dropdown selection -->
+              <div class="sort-selector-wrapper">
+                <label for="sort-select" class="sort-label">Sort By</label>
+                <select id="sort-select" class="sort-select" aria-label="Sort list entry">
+                  <option value="added-desc">Date Added (Newest)</option>
+                  <option value="added-asc">Date Added (Oldest)</option>
+                  <option value="score-desc">My Score (Highest)</option>
+                  <option value="score-asc">My Score (Lowest)</option>
+                  <option value="title-asc">Title (A-Z)</option>
+                  <option value="title-desc">Title (Z-A)</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Add manual anime button -->
+            <button class="btn-add-anime" id="btn-add-anime" title="Add manual anime to watchlist">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+              Add Anime
+            </button>
+          </section>
+
+          <!-- Anime List Grid -->
+          <main class="anime-grid" id="anime-grid">
+            <!-- Cards will be dynamically inserted here -->
+          </main>
         </div>
       </div>
 
-      <!-- Add Button -->
-      <button class="add-btn" id="btn-add-anime" aria-haspopup="dialog">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="12" y1="5" x2="12" y2="19"></line>
-          <line x1="5" y1="12" x2="19" y2="12"></line>
-        </svg>
-        Add Anime
-      </button>
-    </section>
-
-    <!-- Anime List Grid -->
-    <main class="anime-grid" id="anime-grid">
-      <!-- Cards will be dynamically inserted here -->
-    </main>
+      <!-- Right Streaming Sites Sidebar -->
+      <aside class="streaming-sidebar" aria-label="Streaming Links">
+        <div class="streaming-banner">
+          <h2 class="streaming-banner-title">📺 Streaming Sites</h2>
+          <p class="streaming-banner-subtitle">Quick access to watch your highly rated shows:</p>
+          <ul class="streaming-list">
+            <li>
+              <a href="https://www.miruro.to/" target="_blank" rel="noopener noreferrer" class="streaming-link">
+                <span class="stream-logo">🟧</span>
+                <div class="stream-info">
+                  <span class="stream-name">Miruro</span>
+                  <span class="stream-tag">Popular streaming hub</span>
+                </div>
+              </a>
+            </li>
+            <li>
+              <a href="https://anisuge.tv/home" target="_blank" rel="noopener noreferrer" class="streaming-link">
+                <span class="stream-logo">🟩</span>
+                <div class="stream-info">
+                  <span class="stream-name">Anisuge</span>
+                  <span class="stream-tag">Smooth playback portal</span>
+                </div>
+              </a>
+            </li>
+            <li>
+              <a href="https://anitaku.io/" target="_blank" rel="noopener noreferrer" class="streaming-link">
+                <span class="stream-logo">🟨</span>
+                <div class="stream-info">
+                  <span class="stream-name">Anitaku</span>
+                  <span class="stream-tag">Classic catalog mirror</span>
+                </div>
+              </a>
+            </li>
+            <li>
+              <a href="https://animepahe.pw/" target="_blank" rel="noopener noreferrer" class="streaming-link">
+                <span class="stream-logo">🟦</span>
+                <div class="stream-info">
+                  <span class="stream-name">AnimePahe</span>
+                  <span class="stream-tag">Fast & light streaming</span>
+                </div>
+              </a>
+            </li>
+            <li>
+              <a href="https://anime.nexus/" target="_blank" rel="noopener noreferrer" class="streaming-link">
+                <span class="stream-logo">🟪</span>
+                <div class="stream-info">
+                  <span class="stream-name">Anime.nexus</span>
+                  <span class="stream-tag">Modern interface portal</span>
+                </div>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </aside>
+    </div>
   </div>
 
   <!-- Add/Edit Anime Modal Dialog -->
@@ -122,9 +315,9 @@
           <div class="form-group">
             <label for="anime-status">Status</label>
             <select id="anime-status">
-              <option value="watching">Watching</option>
-              <option value="completed">Completed</option>
-              <option value="on-hold">On Hold</option>
+              <option value="watching">Currently Watching</option>
+              <option value="completed">Already Watched</option>
+              <option value="watch-next">Watch Next</option>
               <option value="planning">Plan To Watch</option>
             </select>
           </div>
