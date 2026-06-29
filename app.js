@@ -359,7 +359,7 @@ function normalizeString(str) {
 
 // Fetch seasonal anime using Jikan API (with LocalStorage caching)
 async function fetchDiscoverSeasons() {
-  const cacheKey = `otaku_year_cache_v3_${discoverYear}`;
+  const cacheKey = `otaku_year_cache_v4_${discoverYear}`;
   
   // Set loading UI state
   apiStatusBadge.className = 'api-status-badge loading';
@@ -430,6 +430,22 @@ async function fetchDiscoverSeasons() {
 
     // Filter by score above 7.0 (as requested)
     compiledData = compiledData.filter(anime => anime.score && anime.score >= 7.0);
+
+    // Filter by year: ensure the anime's release year matches the selected discoverYear
+    compiledData = compiledData.filter(anime => {
+      let animeYear = anime.year;
+      if (!animeYear && anime.aired?.prop?.from?.year) {
+        animeYear = anime.aired.prop.from.year;
+      }
+      if (!animeYear && anime.aired?.from) {
+        const d = new Date(anime.aired.from);
+        if (!isNaN(d.getTime())) {
+          animeYear = d.getFullYear();
+        }
+      }
+      // If we can't determine the year, allow it as a fallback, otherwise it must match discoverYear
+      return !animeYear || animeYear === discoverYear;
+    });
 
     // Deduplicate entries by MAL ID and normalized title (prevents duplicate shows like Dr. Stone)
     const seenIds = new Set();
@@ -700,7 +716,7 @@ function renderDiscoverCards(data) {
     return;
   }
 
-  // 1. Group anime by genre first
+  // 1. Group anime by genre first (only using primary/first genre to avoid duplicates)
   const genreMap = new Map(); // genreName -> array of anime
   data.forEach(anime => {
     const genres = anime.genres || [];
@@ -708,10 +724,10 @@ function renderDiscoverCards(data) {
       if (!genreMap.has("General")) genreMap.set("General", []);
       genreMap.get("General").push(anime);
     } else {
-      genres.forEach(g => {
-        if (!genreMap.has(g.name)) genreMap.set(g.name, []);
-        genreMap.get(g.name).push(anime);
-      });
+      // Use only the first genre as the primary category
+      const primaryGenre = genres[0].name;
+      if (!genreMap.has(primaryGenre)) genreMap.set(primaryGenre, []);
+      genreMap.get(primaryGenre).push(anime);
     }
   });
 
