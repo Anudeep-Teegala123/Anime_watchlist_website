@@ -359,7 +359,7 @@ function normalizeString(str) {
 
 // Fetch seasonal anime using Jikan API (with LocalStorage caching)
 async function fetchDiscoverSeasons() {
-  const cacheKey = `otaku_year_cache_v5_${discoverYear}`;
+  const cacheKey = `otaku_year_cache_v6_${discoverYear}`;
   
   // Set loading UI state
   apiStatusBadge.className = 'api-status-badge loading';
@@ -428,8 +428,12 @@ async function fetchDiscoverSeasons() {
       compiledData = compiledData.concat(list);
     });
 
-    // Filter by score above 7.0 (as requested)
-    compiledData = compiledData.filter(anime => anime.score && anime.score >= 7.0);
+    // Filter by score above 7.0. For the current/future years (>= 2025), also allow upcoming/unrated shows (no score) so that all categories are populated.
+    compiledData = compiledData.filter(anime => {
+      const hasScore = anime.score && anime.score >= 7.0;
+      const isCurrentOrFutureUnscored = !anime.score && Number(discoverYear) >= 2025;
+      return hasScore || isCurrentOrFutureUnscored;
+    });
 
     // Filter by year: ensure the anime's release year matches the selected discoverYear
     compiledData = compiledData.filter(anime => {
