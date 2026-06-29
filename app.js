@@ -359,7 +359,7 @@ function normalizeString(str) {
 
 // Fetch seasonal anime using Jikan API (with LocalStorage caching)
 async function fetchDiscoverSeasons() {
-  const cacheKey = `otaku_year_cache_v4_${discoverYear}`;
+  const cacheKey = `otaku_year_cache_v5_${discoverYear}`;
   
   // Set loading UI state
   apiStatusBadge.className = 'api-status-badge loading';
@@ -444,7 +444,7 @@ async function fetchDiscoverSeasons() {
         }
       }
       // If we can't determine the year, allow it as a fallback, otherwise it must match discoverYear
-      return !animeYear || animeYear === discoverYear;
+      return !animeYear || Number(animeYear) === Number(discoverYear);
     });
 
     // Deduplicate entries by MAL ID and normalized title (prevents duplicate shows like Dr. Stone)
